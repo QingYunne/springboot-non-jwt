@@ -2,6 +2,7 @@ package com.arstialmq.javaweb.repository.impl;
 
 import com.arstialmq.javaweb.repository.BuildingRepository;
 import com.arstialmq.javaweb.repository.entity.BuildingEntity;
+import com.arstialmq.javaweb.utils.ConnectionJDBCUtil;
 import com.arstialmq.javaweb.utils.NumberUtil;
 import com.arstialmq.javaweb.utils.StringUtil;
 import org.springframework.stereotype.Repository;
@@ -11,14 +12,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 @Repository
 public class BuildingRepositoryImpl implements BuildingRepository {
-    static final String DB_URL = "jdbc:mysql://localhost:3306/estatebasic?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-    static final String DB_USER = "root";
-    static final String DB_PASS = "Root@1234";
 
     public static void joinTable(Map<String, Object> params, List<String> typeCode, StringBuilder sql)  {
         String staffId = (String) params.get("staffId");
@@ -27,7 +26,7 @@ public class BuildingRepositoryImpl implements BuildingRepository {
         }
         if (typeCode != null && typeCode.size() != 0) {
             sql.append(" INNER JOIN buildingrenttype ON b.id =  buildingrenttype.buildingid ");
-            sql.append(" INNER JOIN renttype ON buildingrenttype.renttypeid = renttype.id ");
+            sql.append(" INNER JOIN renttype ON buildingrenttype.renttypeid = renttype.id");
         }
         String rentAreaTo = (String) params.get("areaTo");
         String rentAreaFrom = (String) params.get("areaFrom");
@@ -57,13 +56,15 @@ public class BuildingRepositoryImpl implements BuildingRepository {
         }
         String rentAreaTo = (String) params.get("rentAreaTo");
         String rentAreaFrom = (String) params.get("rentAreaFrom");
-        if (StringUtil.checkString(rentAreaTo) && StringUtil.checkString(rentAreaFrom)) {
+        if (StringUtil.checkString(rentAreaTo) || StringUtil.checkString(rentAreaFrom)) {
+            where.append(" AND EXISTS (SELECT ( FROM rentarea r WHERE b.id = r.buildingid)");
             if (NumberUtil.isNumeric(rentAreaTo)) {
                 where.append(" AND rentarea.value <= '" + rentAreaTo + "'");
             }
            if (NumberUtil.isNumeric(rentAreaFrom)) {
                where.append(" AND rentarea.value >= '" + rentAreaFrom + "'");
            }
+           where.append(")");
         }
         String rentPriceTo = (String) params.get("rentPriceTo");
         String rentPriceFrom = (String) params.get("rentPriceFrom");
@@ -75,12 +76,22 @@ public class BuildingRepositoryImpl implements BuildingRepository {
                 where.append(" AND b.rentprice >= '" + rentPriceFrom + "'");
             }
         }
-        if (typeCode != null && typeCode.size() != 0) {
-            List<String> code = new ArrayList<>();
-            for(String e : typeCode) {
-                code.add("'" + e + "'");
-            }
-            where.append(" AND renttype.code IN(" + String.join(",", code) + ")" );
+        //java 7
+//        if (typeCode != null && typeCode.size() != 0) {
+//            List<String> code = new ArrayList<>();
+//            for(String e : typeCode) {
+//                code.add("'" + e + "'");
+//            }
+//            where.append(" AND renttype.code IN(" + String.join(",", code) + ")" );
+//        }
+
+        //java 8
+        if (!typeCode.isEmpty()) {
+            where.append(" AND renttype.code IN(")
+                    .append(typeCode.stream()
+                            .map(code -> "'" + code + "'")
+                            .collect(Collectors.joining(",")))
+                    .append(")");
         }
     }
 
@@ -95,9 +106,9 @@ public class BuildingRepositoryImpl implements BuildingRepository {
         System.out.println(sql.toString());
 
         List<BuildingEntity> resutl = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sql.toString())) {
+        try (Connection conn = ConnectionJDBCUtil.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql.toString())) {
             while (rs.next()) {
                 BuildingEntity buildingEntity = new BuildingEntity();
                 buildingEntity.setId(rs.getLong("b.id"));
