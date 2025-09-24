@@ -8,7 +8,7 @@ package com.arstialmq.javaweb.model;
 //4. Có thể được serialize (optional)
 public class BuildingDTO {
     private String name;
-    private Integer numberOfBasement;
+//    private Integer numberOfBasement;
     private String address;
 
     public String getName() {
@@ -19,13 +19,13 @@ public class BuildingDTO {
         this.name = name;
     }
 
-    public Integer getNumberOfBasement() {
-        return numberOfBasement;
-    }
-
-    public void setNumberOfBasement(Integer numberOfBasement) {
-        this.numberOfBasement = numberOfBasement;
-    }
+//    public Integer getNumberOfBasement() {
+//        return numberOfBasement;
+//    }
+//
+//    public void setNumberOfBasement(Integer numberOfBasement) {
+//        this.numberOfBasement = numberOfBasement;
+//    }
 
     public String getAddress() {
         return address;
