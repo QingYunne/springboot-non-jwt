@@ -6,6 +6,7 @@ public class BuildingEntity {
     private String name;
     private String ward;
     private String street;
+    private Integer numberOfBasement;
     private Long districtId;
     private String managerName;
     private String managerPhoneNumber;
@@ -14,6 +15,14 @@ public class BuildingEntity {
     private Long rentPrice;
     private String serviceFee;
     private Long brokerageFee;
+
+    public Integer getNumberOfBasement() {
+        return numberOfBasement;
+    }
+
+    public void setNumberOfBasement(Integer numberOfBasement) {
+        this.numberOfBasement = numberOfBasement;
+    }
 
     public Long getId() {
         return id;

@@ -1,12 +1,11 @@
 package com.arstialmq.javaweb.service;
 
+import com.arstialmq.javaweb.builder.BuildingSearchBuilder;
 import com.arstialmq.javaweb.model.BuildingDTO;
-import com.arstialmq.javaweb.repository.entity.BuildingEntity;
 
 import java.util.List;
-import java.util.Map;
 
 public interface BuildingService {
 
-    List<BuildingDTO> findAll(Map<String, Object> params, List<String> typeCode);
+    List<BuildingDTO> findAll(BuildingSearchBuilder buildingBuilder);
 }

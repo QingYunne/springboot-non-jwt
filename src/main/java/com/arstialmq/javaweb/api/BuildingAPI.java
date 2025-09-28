@@ -1,5 +1,7 @@
 package com.arstialmq.javaweb.api;
 
+import com.arstialmq.javaweb.builder.BuildingSearchBuilder;
+import com.arstialmq.javaweb.converter.BuildingSearchBuilderConverter;
 import com.arstialmq.javaweb.model.BuildingDTO;
 
 import com.arstialmq.javaweb.customexception.FieldRequiredException;
@@ -7,8 +9,6 @@ import com.arstialmq.javaweb.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +19,14 @@ public class BuildingAPI {
     @Autowired
     private BuildingService buildingService;
 
+    @Autowired
+    private BuildingSearchBuilderConverter  builderConverter;
+
     @GetMapping("/api/building")
     public List<BuildingDTO> getBuildings(@RequestParam Map<String, Object> params,
                                           @RequestParam(name = "typeCode", required = false) List<String> typeCode) {
-        List<BuildingDTO> result = buildingService.findAll(params, typeCode);
+        BuildingSearchBuilder buildingSearchBuilder = builderConverter.toBuildingSearchBuilder(params, typeCode);
+        List<BuildingDTO> result = buildingService.findAll(buildingSearchBuilder);
         return result;
     }
 
