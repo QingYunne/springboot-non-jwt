@@ -4,8 +4,11 @@ import com.arstialmq.javaweb.builder.BuildingSearchBuilder;
 import com.arstialmq.javaweb.repository.BuildingRepository;
 import com.arstialmq.javaweb.repository.entity.BuildingEntity;
 import com.arstialmq.javaweb.utils.ConnectionJDBCUtil;
+import com.arstialmq.javaweb.utils.JPAPropertiesUtil;
 import com.arstialmq.javaweb.utils.NumberUtil;
 import com.arstialmq.javaweb.utils.StringUtil;
+import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Field;
@@ -16,6 +19,9 @@ import java.util.stream.Collectors;
 
 @Repository
 public class BuildingRepositoryImpl implements BuildingRepository {
+
+    @Autowired
+    JPAPropertiesUtil jpaPropertiesUtil;
 
     public static void joinTable(BuildingSearchBuilder builder, StringBuilder sql) {
         Long staffId = builder.getStaffId();
@@ -135,7 +141,8 @@ public class BuildingRepositoryImpl implements BuildingRepository {
         System.out.println(sql.toString());
 
         List<BuildingEntity> resutl = new ArrayList<>();
-        try (Connection conn = ConnectionJDBCUtil.getConnection();
+        try (Connection conn = DriverManager.getConnection(jpaPropertiesUtil.getDB_URL(), jpaPropertiesUtil.getDB_USER(), jpaPropertiesUtil.getDB_PASS());
+//        try (Connection conn = ConnectionJDBCUtil.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql.toString())) {
             while (rs.next()) {
