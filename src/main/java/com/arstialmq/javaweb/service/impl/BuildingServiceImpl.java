@@ -1,5 +1,6 @@
 package com.arstialmq.javaweb.service.impl;
 
+import com.arstialmq.javaweb.builder.BuildingSearchBuilder;
 import com.arstialmq.javaweb.converter.BuildingDTOConverter;
 import com.arstialmq.javaweb.model.BuildingDTO;
 import com.arstialmq.javaweb.repository.BuildingRepository;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class BuildingServiceImpl  implements BuildingService {
@@ -28,8 +28,8 @@ public class BuildingServiceImpl  implements BuildingService {
 //    private RentAreaRepository rentAreaRepository;
 
     @Override
-    public List<BuildingDTO> findAll(Map<String, Object> params, List<String> typeCode) {
-        List<BuildingEntity> buildingEntities = buildingRepository.findAll(params, typeCode);
+    public List<BuildingDTO> findAll(BuildingSearchBuilder buildingBuilder) {
+        List<BuildingEntity> buildingEntities = buildingRepository.findAll(buildingBuilder);
 
         List<BuildingDTO> result = new ArrayList<>();
 
