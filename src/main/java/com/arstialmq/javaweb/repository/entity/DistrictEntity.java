@@ -1,8 +1,25 @@
 package com.arstialmq.javaweb.repository.entity;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "district")
 public class DistrictEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String code, name;
+
+    @Column(name = "code")
+    private String code;
+
+    @Column(name = "name")
+    private  String name;
+
+    @OneToMany(mappedBy = "district", fetch = FetchType.LAZY)
+    private List<BuildingEntity> buildings = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -26,5 +43,13 @@ public class DistrictEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<BuildingEntity> getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(List<BuildingEntity> buildings) {
+        this.buildings = buildings;
     }
 }

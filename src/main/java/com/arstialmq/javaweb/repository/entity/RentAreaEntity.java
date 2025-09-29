@@ -1,9 +1,23 @@
 package com.arstialmq.javaweb.repository.entity;
 
+import com.arstialmq.javaweb.builder.BuildingSearchBuilder;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "rentarea")
 public class RentAreaEntity {
-    Long id;
-    Long value;
-    Long buildingId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "value")
+    private Long value;
+
+    @ManyToOne
+    @JoinColumn(name = "buildingid")
+    private BuildingEntity buildings;
 
     public Long getId() {
         return id;
@@ -21,11 +35,11 @@ public class RentAreaEntity {
         this.value = value;
     }
 
-    public Long getBuildingId() {
-        return buildingId;
+    public BuildingEntity getBuildings() {
+        return buildings;
     }
 
-    public void setBuildingId(Long buildingId) {
-        this.buildingId = buildingId;
+    public void setBuildings(BuildingEntity buildings) {
+        this.buildings = buildings;
     }
 }

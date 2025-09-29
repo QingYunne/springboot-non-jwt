@@ -26,9 +26,9 @@ public class BuildingDTOConverter {
 
     public BuildingDTO toBuildingDTO(BuildingEntity buildingEntity) {
         BuildingDTO result = modelMapper.map(buildingEntity, BuildingDTO.class);
-        DistrictEntity district = districtRepository.findNameById(buildingEntity.getDistrictId());
+        DistrictEntity district = buildingEntity.getDistrict();
         result.setAddress(buildingEntity.getStreet() + "," + buildingEntity.getWard() + "," + district.getName());
-        List<RentAreaEntity> rentAreas = rentAreaRepository.getValueByBuildingId(buildingEntity.getId());
+        List<RentAreaEntity> rentAreas = buildingEntity.getRentAreas();
         String areaResult = rentAreas.stream()
                 .map((rentArea) -> rentArea.getValue().toString())
                 .collect(Collectors.joining(","));
@@ -43,4 +43,24 @@ public class BuildingDTOConverter {
 //        result.setManagerPhoneNumber(buildingEntity.getManagerPhoneNumber());
         return result;
     }
+
+//    public BuildingDTO toBuildingDTO(BuildingEntity buildingEntity) {
+//        BuildingDTO result = modelMapper.map(buildingEntity, BuildingDTO.class);
+//        DistrictEntity district = districtRepository.findNameById(buildingEntity.getDistrictId());
+//        //result.setAddress(buildingEntity.getStreet() + "," + buildingEntity.getWard() + "," + district.getName());
+//        List<RentAreaEntity> rentAreas = rentAreaRepository.getValueByBuildingId(buildingEntity.getId());
+//        String areaResult = rentAreas.stream()
+//                .map((rentArea) -> rentArea.getValue().toString())
+//                .collect(Collectors.joining(","));
+//        result.setRentArea(areaResult);
+//
+//        result.setName(buildingEntity.getName());
+//        result.setRentArea(rentAreas.toString());
+//        result.setBrokerageFee(buildingEntity.getBrokerageFee());
+//        result.setEmptyArea(buildingEntity.getEmptyArea());
+//        result.setFloorArea(buildingEntity.getFloorArea());
+//        result.setManagerName(buildingEntity.getManagerName());
+//        result.setManagerPhoneNumber(buildingEntity.getManagerPhoneNumber());
+//        return result;
+//    }
 }

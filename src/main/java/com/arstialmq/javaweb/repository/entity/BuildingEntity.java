@@ -1,20 +1,57 @@
 package com.arstialmq.javaweb.repository.entity;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "building")
 public class BuildingEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String createDate;
+
+    @Column(name = "createddate")
+    private String createdDate;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "ward")
     private String ward;
+
+    @Column(name = "street")
     private String street;
+
+    @Column(name = "numberofbasement")
     private Integer numberOfBasement;
-    private Long districtId;
+
+    @ManyToOne
+    @JoinColumn(name = "districtid")
+    private DistrictEntity district;
+
+    @Column(name = "managername")
     private String managerName;
+
+    @Column(name = "managerphonenumber")
     private String managerPhoneNumber;
+
+    @Column(name = "floorarea")
     private Long floorArea;
-    private String emptyArea;
+
+    @Column(name = "rentprice")
     private Long rentPrice;
+
+    @Column(name = "servicefee")
     private String serviceFee;
+
+    @Column(name = "brokeragefee")
     private Long brokerageFee;
+
+    @OneToMany(mappedBy = "buildings", fetch = FetchType.LAZY)
+    private List<RentAreaEntity> rentAreas = new ArrayList<>();
+
 
     public Integer getNumberOfBasement() {
         return numberOfBasement;
@@ -32,12 +69,12 @@ public class BuildingEntity {
         this.id = id;
     }
 
-    public String getCreateDate() {
-        return createDate;
+    public String getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
+    public void setCreatedDate(String createDate) {
+        this.createdDate = createDate;
     }
 
     public String getName() {
@@ -64,12 +101,12 @@ public class BuildingEntity {
         this.street = street;
     }
 
-    public Long getDistrictId() {
-        return districtId;
+    public DistrictEntity getDistrict() {
+        return district;
     }
 
-    public void setDistrictId(Long districtId) {
-        this.districtId = districtId;
+    public void setDistrict(DistrictEntity district) {
+        this.district = district;
     }
 
     public String getManagerName() {
@@ -96,14 +133,6 @@ public class BuildingEntity {
         this.floorArea = floorArea;
     }
 
-    public String getEmptyArea() {
-        return emptyArea;
-    }
-
-    public void setEmptyArea(String emptyArea) {
-        this.emptyArea = emptyArea;
-    }
-
     public Long getRentPrice() {
         return rentPrice;
     }
@@ -126,5 +155,13 @@ public class BuildingEntity {
 
     public void setBrokerageFee(Long brokerageFee) {
         this.brokerageFee = brokerageFee;
+    }
+
+    public List<RentAreaEntity> getRentAreas() {
+        return rentAreas;
+    }
+
+    public void setRentAreas(List<RentAreaEntity> rentAreas) {
+        this.rentAreas = rentAreas;
     }
 }

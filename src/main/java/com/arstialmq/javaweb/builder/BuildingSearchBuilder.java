@@ -33,7 +33,7 @@ public class BuildingSearchBuilder {
         this.rentAreaTo = builder.areaTo;
         this.rentAreaFrom = builder.areaFrom;
         this.staffId = builder.staffId;
-        this.typeCode = new ArrayList<>(builder.typeCode);
+        this.typeCode = (builder.typeCode != null) ? new ArrayList<>(builder.typeCode) : new ArrayList<>();
     }
 
     public String getName() {
