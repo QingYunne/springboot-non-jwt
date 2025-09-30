@@ -30,8 +30,14 @@ public class UserEntity {
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<UserRoleEntity> userRoles = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_role",
+                joinColumns = @JoinColumn(name = "userid", nullable = false),
+                inverseJoinColumns = @JoinColumn(name = "roleid", nullable = false))
+    private List<RoleEntity> roles = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+//    private List<UserRoleEntity> userRoles = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -89,11 +95,11 @@ public class UserEntity {
         this.status = status;
     }
 
-    public List<UserRoleEntity> getUserRoles() {
-        return userRoles;
-    }
-
-    public void setUserRoles(List<UserRoleEntity> userRoles) {
-        this.userRoles = userRoles;
-    }
+//    public List<UserRoleEntity> getUserRoles() {
+//        return userRoles;
+//    }
+//
+//    public void setUserRoles(List<UserRoleEntity> userRoles) {
+//        this.userRoles = userRoles;
+//    }
 }

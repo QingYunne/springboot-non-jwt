@@ -2,8 +2,8 @@ package com.arstialmq.javaweb.repository.entity;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "user_role")
+//@Entity
+//@Table(name = "user_role")
 public class UserRoleEntity {
 
     @Id

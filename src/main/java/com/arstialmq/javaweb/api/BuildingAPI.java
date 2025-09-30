@@ -5,10 +5,16 @@ import com.arstialmq.javaweb.converter.BuildingSearchBuilderConverter;
 import com.arstialmq.javaweb.model.BuildingDTO;
 
 import com.arstialmq.javaweb.customexception.FieldRequiredException;
+import com.arstialmq.javaweb.model.BuildingRequestDTO;
+import com.arstialmq.javaweb.repository.entity.BuildingEntity;
+import com.arstialmq.javaweb.repository.entity.DistrictEntity;
 import com.arstialmq.javaweb.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +28,9 @@ public class BuildingAPI {
     @Autowired
     private BuildingSearchBuilderConverter  builderConverter;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @GetMapping("/api/building")
     public List<BuildingDTO> getBuildings(@RequestParam Map<String, Object> params,
                                           @RequestParam(name = "typeCode", required = false) List<String> typeCode) {
@@ -34,11 +43,24 @@ public class BuildingAPI {
 //
     }
 
+    @PostMapping("/api/building/")
+    @Transactional
+    public void createBuilding(@RequestBody BuildingRequestDTO buildingDTO) {
+        BuildingEntity buildingEntity = new BuildingEntity();
+        buildingEntity.setName(buildingDTO.getName());
+        buildingEntity.setRentPrice(buildingDTO.getRentPrice());
+        buildingEntity.setStreet(buildingDTO.getStreet());
+        buildingEntity.setWard(buildingDTO.getWard());
+        DistrictEntity district = new DistrictEntity();
+        district.setId(buildingDTO.getDistrictId());
+        buildingEntity.setDistrict(district);
+        entityManager.persist(buildingEntity);
+    }
+
     @DeleteMapping("/api/building/{id}")
-    public void deleteBuilding(@PathVariable String id,
-                               @RequestParam(value = "numberOfBasement", required = false) Integer numberOfBasement,
-                               @RequestParam(value = "ward", required = false) String ward) {
-        System.out.println("Already have deleted building: " + id);
+    public void deleteBuilding(@PathVariable Long id) {
+        BuildingEntity buildingEntity = entityManager.find(BuildingEntity.class, id);
+        entityManager.remove(buildingEntity);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.arstialmq.javaweb.repository.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "role")
@@ -14,6 +16,9 @@ public class RoleEntity {
 
     @Column(name = "code", nullable = false)
     private String code;
+
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    private List<UserEntity> users = new ArrayList<>();
 
     public Long getId() {
         return id;
