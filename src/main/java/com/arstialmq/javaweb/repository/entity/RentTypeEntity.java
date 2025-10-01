@@ -17,5 +17,10 @@ public class RentTypeEntity {
     private String name;
 
     @ManyToMany
+    @JoinTable(
+            name = "buildingrenttype",
+            joinColumns = @JoinColumn(name = "renttypeid", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "buildingid", nullable = false)
+    )
     private List<BuildingEntity> buildings;
 }

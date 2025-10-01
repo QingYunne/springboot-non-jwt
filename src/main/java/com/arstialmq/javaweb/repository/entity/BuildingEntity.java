@@ -55,6 +55,17 @@ public class BuildingEntity {
     @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
     private List<AssignmentBuildingEntity> assignmentBuildings = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "buildings", fetch = FetchType.LAZY)
+    private List<RentTypeEntity> rentTypes = new ArrayList<>();
+
+    public List<RentTypeEntity> getRentTypes() {
+        return rentTypes;
+    }
+
+    public void setRentTypes(List<RentTypeEntity> rentTypes) {
+        this.rentTypes = rentTypes;
+    }
+
     public Integer getNumberOfBasement() {
         return numberOfBasement;
     }
